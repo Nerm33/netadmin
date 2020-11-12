@@ -5,6 +5,7 @@ import socket
 import sys
 import netmiko
 from getpass import getpass
+from datetime import date
 
 
 def to_doc_w(file_name, variable):
@@ -21,7 +22,7 @@ def to_doc_a(file_name, varable):
 
 def pull_run(username,password,net_connect,ip):
 	hostname = net_connect.find_prompt()[:-1]
-	running_config = hostname + "running_config.txt"
+	running_config = hostname + "_" + str(date.today()) + ".txt"
 	to_doc_w(running_config, net_connect.send_command_expect('show run'))
 
 def get_ip (input):
