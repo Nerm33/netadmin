@@ -7,10 +7,14 @@ import netmiko
 from getpass import getpass
 from datetime import date
 
+#Set script variables
+ips = []
+username = input('Username: ')
+password = getpass()
+f_path = pjoin(os.getcwd(), 'results')
 
 def to_doc_w(file_name, variable):
-        file_path = pjoin(os.getcwd(), "results")
-        file = pjoin(file_path, file_name)
+        file = pjoin(f_path, file_name)
         f = open(file, 'w')
         f.write(variable)
         f.close()	
@@ -42,22 +46,19 @@ def main():
     for ip in ips:
             try:
                     print('~' * 79)
-                    print('Connecting to device:', ip)
+                    print('Connecting to', ip)
                     print()
                     net_connect = netmiko.ConnectHandler(device_type='cisco_ios', ip=ip, username=username, password=password)
+                    print('Connected to', ip)
                     pull_run(username,password,net_connect,ip)
+                    print('Config file copied to', f_path)
             except socket.timeout:
-                    print ("Failed connecting to device:", ip)
+                    print ('Error: Connection to device', ip, 'timed out')
             except:
-                    print ("Something went wrong connecting to device:", ip)
+                    print ('Error: Something went wrong connecting to', ip)
 
-#Set script variables
-ips = []
-get_ips("ip-list.txt")
-username = input("Username: ")
-password = getpass()
+get_ips('ip-list.txt')
 
 test_dir()
 
 main()
-
